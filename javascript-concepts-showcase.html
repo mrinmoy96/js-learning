@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Concepts Showcase</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4cb5f5;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            padding: 10px 20px;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .sidebar li:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent);
+        }
+        
+        .sidebar li.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid var(--accent);
+        }
+        
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            scroll-margin-top: 20px;
+        }
+        
+        .section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .section p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Interactive Examples */
+        .example {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .output {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            min-height: 50px;
+        }
+        
+        /* Form Elements */
+        input, select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                height: auto;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+        }
+        
+        .github-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .github-info h3 {
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+        
+        .github-info code {
+            background: #2d2d2d;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            display: block;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>JS Concepts</h2>
+        <ul>
+            <li class="active" data-section="variables">Variables & Scoping</li>
+            <li data-section="functions">Functions</li>
+            <li data-section="objects">Objects & Arrays</li>
+            <li data-section="dom">DOM Manipulation</li>
+            <li data-section="events">Event Handling</li>
+            <li data-section="async">Async JavaScript</li>
+            <li data-section="es6">ES6+ Features</li>
+            <li data-section="oop">OOP in JavaScript</li>
+            <li data-section="error">Error Handling</li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Variables & Scoping Section -->
+        <div class="section" id="variables">
+            <h2>Variables & Scoping</h2>
+            <p>JavaScript has three ways to declare variables: var, let, and const. Each has different scoping rules.</p>
+            
+            <div class="code-block">
+                <pre><code class="language-javascript">
+// Variable declarations
+var globalVar = "I'm a global variable";
+let blockScoped = "I'm block-scoped";
+const constantValue = "I can't be reassigned";
+
+function demonstrateScoping() {
+    if (true) {
+        var functionScoped = "I'm accessible throughout the function";
+        let blockScoped = "I'm only accessible in this block";
+    }
+    console.log(functionScoped); // Works
+    // console.log(blockScoped); // Would throw an error
+}
+</code></pre>
+            </div>
+            
+            <div class="example">
+                <button class="btn btn-primary" onclick="demonstrateScoping()">Run Scoping Example</button>
+                <div class="output" id="scoping-output"></div>
+            </div>
+        </div>
+
+        <!-- Functions Section -->
+        <div class="section" id="functions">
+            <h2>Functions</h2>
+            <p>JavaScript functions can be declared in several ways and support features like closures and higher-order functions.</p>
+            
+            <div class="code-block">
+                <pre><code class="language-javascript">
+// Function declarations
+function regularFunction(a, b) {
+    return a + b;
+}
+
+// Function expression
+const arrowFunction = (a, b) => a + b;
+
+// Higher-order function
+function createMultiplier(multiplier) {
+    return function(x) {
+        return x * multiplier;
+    };
+}
+
+const double = createMultiplier(2);
+console.log(double(5)); // 10
+</code></pre>
+            </div>
+            
+            <div class="example">
+                <input type="number" id="multiplier-input" placeholder="Enter a number" value="5">
+                <button class="btn btn-primary" onclick="runFunctionExamples()">Run Function Examples</button>
+                <div class="output" id="function-output"></div>
+            </div>
+        </div>
+
+        <!-- Objects & Arrays Section -->
+        <div class="section" id="objects">
+            <h2>Objects & Arrays</h2>
+            <p>Objects and arrays are fundamental data structures in JavaScript with powerful methods for manipulation.</p>
+            
+            <div class="code-block">
+                <pre><code class="language-javascript">
+// Object examples
+const person = {
+    name: "Alice",
+    age: 30,
+    greet() {
+        return `Hello, my name is ${this.name}`;
+    }
+};
+
+// Array methods
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);
+const evens = numbers.filter(n => n % 2 === 0);
+const sum = numbers.reduce((acc, n) => acc + n, 0);
+
+// Destructuring
+const { name, age } = person;
+const [first, second] = numbers;
+</code></pre>
+            </div>
+            
+            <div class="example">
+                <button class="btn btn-primary" onclick="runObjectArrayExamples()">Run Object & Array Examples</button>
+                <div class="output" id="object-array-output"></div>
+            </div>
+        </div>
+
+        <!-- DOM Manipulation Section -->
+        <div class="section" id="dom">
+            <h2>DOM Manipulation</h2>
+            <p>The Document Object Model (DOM) allows JavaScript to interact with and modify HTML elements.</p>
+            
+            <div class="code-block">
+                <pre><code class="language-javascript">
+// Selecting elements
+const header = document.querySelector('h2');
+const allSections = document.querySelectorAll('.section');
+
+// Creating elements
+const newDiv = document.createElement('div');
+newDiv.textContent = 'I was created with JavaScript!';
+newDiv.className = 'dynamic-element';
+
+// Modifying styles
+newDiv.style.backgroundColor = '#4a6fa5';
+newDiv.style.color = 'white';
+newDiv.style.padding = '10px';
+
+// Adding to the DOM
+document.getElementById('dom-output').appendChild(newDiv);
+</code></pre>
+            </div>
+            
+            <div class="example">
+                <input type="text" id="element-text" placeholder="Enter text for new element" value="Dynamic Content!">
+                <select id="color-select">
+                    <option value="#4a6fa5">Blue</option>
+                    <option value="#28a745">Green</option>
+                    <option value="#dc3545">Red</option>
+                    <option value="#ffc107">Yellow</option>
+                </select>
+                <button class="btn btn-primary" onclick="createDynamicElement()">Create Element</button>
+                <div class="output" id="dom-output"></div>
+            </div>
+        </div>
+
+        <!-- Event Handling Section -->
+        <div class="section" id="events">
+            <h2>Event Handling</h2>
+            <p>JavaScript can respond to user interactions through event listeners and handlers.</p>
+            
+            <div class="example">
+                <button class="btn btn-primary" id="event-button">Click Me!</button>
+                <button class="btn btn-success" id="once-button">Click Once</button>
+                <button class="btn btn-danger" id="remove-button">Remove Handler</button>
+                <div class="output" id="event-output">Event responses will appear here</div>
+            </div>
+        </div>
+
+        <!-- Async JavaScript Section -->
+        <div class="section" id="async">
+            <h2>Async JavaScript</h2>
+            <p>JavaScript uses callbacks, promises, and async/await to handle asynchronous operations.</p>
+            
+            <div class="example">
+                <button class="btn btn-primary" onclick="simulateAsync()">Simulate Async Operation</button>
+                <button class="btn btn-success" onclick="fetchData()">Fetch Data (Promise)</button>
+                <button class="btn btn-info" onclick="useAsyncAwait()">Use Async/Await</button>
+                <div class="output" id="async-output"></div>
+            </div>
+        </div>
+
+        <!-- ES6+ Features Section -->
+        <div class="section" id="es6">
+            <h2>ES6+ Features</h2>
+            <p>Modern JavaScript introduced many powerful features that make code more concise and expressive.</p>
+            
+            <div class="code-block">
+                <pre><code class="language-javascript">
+// Template literals
+const name = "Alice";
+const greeting = `Hello, ${name}!`;
+
+// Arrow functions
+const add = (a, b) => a + b;
+
+// Default parameters
+function greet(user = "Guest") {
+    return `Hello, ${user}!`;
+}
+
+// Spread and rest operators
+const numbers = [1, 2, 3];
+const newNumbers = [...numbers, 4, 5];
+
+function sum(...args) {
+    return args.reduce((acc, val) => acc + val, 0);
+}
+
+// Enhanced object literals
+const prop = "value";
+const obj = {
+    prop, // Shorthand for prop: prop
+    method() { // Method shorthand
+        return this.prop;
+    }
+};
+</code></pre>
+            </div>
+            
+            <div class="example">
+                <button class="btn btn-primary" onclick="runES6Examples()">Run ES6+ Examples</button>
+                <div class="output" id="es6-output"></div>
+            </div>
+        </div>
+
+        <!-- OOP in JavaScript Section -->
+        <div class="section" id="oop">
+            <h2>OOP in JavaScript</h2>
+            <p>JavaScript uses prototype-based inheritance, but ES6 introduced class syntax for more familiar OOP patterns.</p>
+            
+            <div class="code-block">
+                <pre><code class="language-javascript">
+// Constructor function (traditional approach)
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+Person.prototype.greet = function() {
+    return `Hello, my name is ${this.name}`;
+};
+
+// ES6 Class syntax
+class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        return `${this.name} makes a sound.`;
+    }
+}
+
+class Dog extends Animal {
+    constructor(name, breed) {
+        super(name);
+        this.breed = breed;
+    }
+    
+    speak() {
+        return `${this.name} barks!`;
+    }
+    
+    get description() {
+        return `${this.name} is a ${this.breed}`;
+    }
+}
+
+// Creating instances
+const person = new Person("Alice", 30);
+const dog = new Dog("Rex", "German Shepherd");
+</code></pre>
+            </div>
+            
+            <div class="example">
+                <button class="btn btn-primary" onclick="runOOPExamples()">Run OOP Examples</button>
+                <div class="output" id="oop-output"></div>
+            </div>
+        </div>
+
+        <!-- Error Handling Section -->
+        <div class="section" id="error">
+            <h2>Error Handling</h2>
+            <p>JavaScript provides try/catch/finally blocks for handling errors gracefully.</p>
+            
+            <div class="code-block">
+                <pre><code class="language-javascript">
+// Basic error handling
+function riskyOperation() {
+    if (Math.random() < 0.5) {
+        throw new Error("Something went wrong!");
+    }
+    return "Success!";
+}
+
+try {
+    const result = riskyOperation();
+    console.log(result);
+} catch (error) {
+    console.error("Caught an error:", error.message);
+} finally {
+    console.log("This always runs");
+}
+
+// Custom error types
+class ValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "ValidationError";
+    }
+}
+
+function validateEmail(email) {
+    if (!email.includes("@")) {
+        throw new ValidationError("Invalid email address");
+    }
+}
+
+// Handling different error types
+try {
+    validateEmail("not-an-email");
+} catch (error) {
+    if (error instanceof ValidationError) {
+        console.log("Validation error:", error.message);
+    } else {
+        console.log("Other error:", error.message);
+    }
+}
+</code></pre>
+            </div>
+            
+            <div class="example">
+                <button class="btn btn-primary" onclick="runErrorHandlingExamples()">Run Error Handling Examples</button>
+                <div class="output" id="error-output"></div>
+            </div>
+        </div>
+        
+        <!-- GitHub Deployment Instructions -->
+        <div class="section github-info">
+            <h2>Deploying to GitHub Pages</h2>
+            <p>To deploy this project to GitHub Pages:</p>
+            <ol>
+                <li>Create a new repository on GitHub</li>
+                <li>Initialize git in your project folder:
+                    <code>git init</code>
+                </li>
+                <li>Add all files to git:
+                    <code>git add .</code>
+                </li>
+                <li>Commit your files:
+                    <code>git commit -m "Initial commit"</code>
+                </li>
+                <li>Add your GitHub repository as remote:
+                    <code>git remote add origin https://github.com/your-username/your-repo-name.git</code>
+                </li>
+                <li>Push to GitHub:
+                    <code>git branch -M main</code>
+                    <code>git push -u origin main</code>
+                </li>
+                <li>Go to your repository Settings → Pages → Select "main" branch → Save</li>
+                <li>Your site will be published at: https://your-username.github.io/your-repo-name/</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js"></script>
+    <script>
+        // Variables & Scoping Example
+        function demonstrateScoping() {
+            const output = document.getElementById('scoping-output');
+            output.innerHTML = '';
+            
+            if (true) {
+                var functionScoped = "I'm accessible throughout the function";
+                let blockScoped = "I'm only accessible in this block";
+                output.innerHTML += `<p>Inside block: ${functionScoped}</p>`;
+                output.innerHTML += `<p>Inside block: ${blockScoped}</p>`;
+            }
+            
+            output.innerHTML += `<p>Outside block: ${functionScoped}</p>`;
+            // This would cause an error:
+            // output.innerHTML += `<p>Outside block: ${blockScoped}</p>`;
+        }
+
+        // Functions Example
+        function runFunctionExamples() {
+            const input = document.getElementById('multiplier-input').value;
+            const num = parseInt(input) || 5;
+            const output = document.getElementById('function-output');
+            
+            function createMultiplier(multiplier) {
+                return function(x) {
+                    return x * multiplier;
+                };
+            }
+            
+            const double = createMultiplier(2);
+            const triple = createMultiplier(3);
+            
+            output.innerHTML = `
+                <p>Double of ${num} is ${double(num)}</p>
+                <p>Triple of ${num} is ${triple(num)}</p>
+            `;
+        }
+
+        // Objects & Arrays Example
+        function runObjectArrayExamples() {
+            const output = document.getElementById('object-array-output');
+            
+            const person = {
+                name: "Alice",
+                age: 30,
+                greet() {
+                    return `Hello, my name is ${this.name}`;
+                }
+            };
+            
+            const numbers = [1, 2, 3, 4, 5];
+            const doubled = numbers.map(n => n * 2);
+            const evens = numbers.filter(n => n % 2 === 0);
+            const sum = numbers.reduce((acc, n) => acc + n, 0);
+            
+            // Destructuring
+            const { name, age } = person;
+            const [first, second] = numbers;
+            
+            output.innerHTML = `
+                <p>Person: ${person.greet()}</p>
+                <p>Original numbers: ${numbers.join(', ')}</p>
+                <p>Doubled: ${doubled.join(', ')}</p>
+                <p>Evens: ${evens.join(', ')}</p>
+                <p>Sum: ${sum}</p>
+                <p>Destructured: name=${name}, age=${age}, first=${first}, second=${second}</p>
+            `;
+        }
+
+        // DOM Manipulation Example
+        function createDynamicElement() {
+            const text = document.getElementById('element-text').value || 'Dynamic Content!';
+            const color = document.getElementById('color-select').value;
+            const output = document.getElementById('dom-output');
+            
+            const newDiv = document.createElement('div');
+            newDiv.textContent = text;
+            newDiv.className = 'dynamic-element';
+            newDiv.style.backgroundColor = color;
+            newDiv.style.color = 'white';
+            newDiv.style.padding = '10px';
+            newDiv.style.marginTop = '10px';
+            newDiv.style.borderRadius = '4px';
+            
+            output.appendChild(newDiv);
+        }
+
+        // Event Handling Example
+        document.getElementById('event-button').addEventListener('click', function() {
+            document.getElementById('event-output').innerHTML += '<p>Button clicked!</p>';
+        });
+        
+        function handleOnce() {
+            document.getElementById('event-output').innerHTML += '<p>This will only happen once!</p>';
+            document.getElementById('once-button').removeEventListener('click', handleOnce);
+        }
+        
+        document.getElementById('once-button').addEventListener('click', handleOnce);
+        
+        function removableHandler() {
+            document.getElementById('event-output').innerHTML += '<p>This handler can be removed</p>';
+        }
+        
+        document.getElementById('remove-button').addEventListener('click', removableHandler);
+        
+        document.getElementById('remove-button').addEventListener('click', function() {
+            document.getElementById('remove-button').removeEventListener('click', removableHandler);
+            document.getElementById('event-output').innerHTML += '<p>Handler removed!</p>';
+        });
+
+        // Async JavaScript Example
+        function simulateAsync() {
+            const output = document.getElementById('async-output');
+            output.innerHTML = '<p>Starting async operation (simulated with setTimeout)...</p>';
+            
+            setTimeout(() => {
+                output.innerHTML += '<p>Async operation completed after 2 seconds!</p>';
+            }, 2000);
+        }
+        
+        function fetchData() {
+            const output = document.getElementById('async-output');
+            output.innerHTML = '<p>Fetching data (simulated)...</p>';
+            
+            // Simulate API call with Promise
+            new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    Math.random() > 0.2 
+                        ? resolve("Data successfully retrieved!")
+                        : reject("Failed to fetch data!");
+                }, 1500);
+            })
+            .then(data => {
+                output.innerHTML += `<p style="color: green;">Success: ${data}</p>`;
+            })
+            .catch(error => {
+                output.innerHTML += `<p style="color: red;">Error: ${error}</p>`;
+            });
+        }
+        
+        async function useAsyncAwait() {
+            const output = document.getElementById('async-output');
+            output.innerHTML = '<p>Using async/await to fetch data...</p>';
+            
+            try {
+                // Simulate API call
+                const data = await new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        Math.random() > 0.2 
+                            ? resolve("Data received with async/await!")
+                            : reject("Async/Await request failed!");
+                    }, 1500);
+                });
+                
+                output.innerHTML += `<p style="color: green;">${data}</p>`;
+            } catch (error) {
+                output.innerHTML += `<p style="color: red;">${error}</p>`;
+            }
+        }
+
+        // ES6+ Features Example
+        function runES6Examples() {
+            const output = document.getElementById('es6-output');
+            output.innerHTML = '';
+            
+            // Template literals
+            const name = "Alice";
+            const greeting = `Hello, ${name}!`;
+            output.innerHTML += `<p>${greeting}</p>`;
+            
+            // Arrow functions
+            const add = (a, b) => a + b;
+            output.innerHTML += `<p>5 + 3 = ${add(5, 3)}</p>`;
+            
+            // Default parameters
+            function greet(user = "Guest") {
+                return `Hello, ${user}!`;
+            }
+            output.innerHTML += `<p>${greet()}</p>`;
+            output.innerHTML += `<p>${greet("Bob")}</p>`;
+            
+            // Spread and rest operators
+            const numbers = [1, 2, 3];
+            const newNumbers = [...numbers, 4, 5];
+            output.innerHTML += `<p>Spread operator: ${newNumbers.join(', ')}</p>`;
+            
+            function sum(...args) {
+                return args.reduce((acc, val) => acc + val, 0);
+            }
+            output.innerHTML += `<p>Sum of 1, 2, 3, 4, 5: ${sum(1, 2, 3, 4, 5)}</p>`;
+            
+            // Enhanced object literals
+            const prop = "value";
+            const obj = {
+                prop, // Shorthand for prop: prop
+                method() { // Method shorthand
+                    return this.prop;
+                }
+            };
+            output.innerHTML += `<p>Enhanced object: ${obj.method()}</p>`;
+        }
+
+        // OOP in JavaScript Example
+        function runOOPExamples() {
+            const output = document.getElementById('oop-output');
+            output.innerHTML = '';
+            
+            // Constructor function (traditional approach)
+            function Person(name, age) {
+                this.name = name;
+                this.age = age;
+            }
+
+            Person.prototype.greet = function() {
+                return `Hello, my name is ${this.name}`;
+            };
+
+            // ES6 Class syntax
+            class Animal {
+                constructor(name) {
+                    this.name = name;
+                }
+                
+                speak() {
+                    return `${this.name} makes a sound.`;
+                }
+            }
+
+            class Dog extends Animal {
+                constructor(name, breed) {
+                    super(name);
+                    this.breed = breed;
+                }
+                
+                speak() {
+                    return `${this.name} barks!`;
+                }
+                
+                get description() {
+                    return `${this.name} is a ${this.breed}`;
+                }
+            }
+
+            // Creating instances
+            const person = new Person("Alice", 30);
+            const dog = new Dog("Rex", "German Shepherd");
+            
+            output.innerHTML += `<p>Person: ${person.greet()}</p>`;
+            output.innerHTML += `<p>Animal: ${dog.speak()}</p>`;
+            output.innerHTML += `<p>Dog: ${dog.description}</p>`;
+        }
+
+        // Error Handling Example
+        function runErrorHandlingExamples() {
+            const output = document.getElementById('error-output');
+            output.innerHTML = '';
+            
+            // Basic error handling
+            function riskyOperation() {
+                if (Math.random() < 0.5) {
+                    throw new Error("Something went wrong!");
+                }
+                return "Success!";
+            }
+
+            try {
+                const result = riskyOperation();
+                output.innerHTML += `<p style="color: green;">${result}</p>`;
+            } catch (error) {
+                output.innerHTML += `<p style="color: red;">Caught an error: ${error.message}</p>`;
+            } finally {
+                output.innerHTML += `<p>This always runs</p>`;
+            }
+
+            // Custom error types
+            class ValidationError extends Error {
+                constructor(message) {
+                    super(message);
+                    this.name = "ValidationError";
+                }
+            }
+
+            function validateEmail(email) {
+                if (!email.includes("@")) {
+                    throw new ValidationError("Invalid email address");
+                }
+                return "Email is valid!";
+            }
+
+            // Handling different error types
+            try {
+                const result = validateEmail("not-an-email");
+                output.innerHTML += `<p style="color: green;">${result}</p>`;
+            } catch (error) {
+                if (error instanceof ValidationError) {
+                    output.innerHTML += `<p style="color: orange;">Validation error: ${error.message}</p>`;
+                } else {
+                    output.innerHTML += `<p style="color: red;">Other error: ${error.message}</p>`;
+                }
+            }
+        }
+
+        // Navigation functionality
+        document.querySelectorAll('.sidebar li').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.sidebar li').forEach(li => {
+                    li.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Scroll to corresponding section
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Initialize Prism syntax highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>
