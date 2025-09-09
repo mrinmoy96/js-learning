@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Demo Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f8f8;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .error {
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App</h1>
+        
+        <!-- Input Section -->
+        <div class="input-section">
+            <input type="text" id="todoInput" placeholder="Enter new todo">
+            <button onclick="addTodo()">Add Todo</button>
+            <div id="errorMessage" class="error">Please enter a todo!</div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filters">
+            <button onclick="filterTodos('all')">Show All</button>
+            <button onclick="filterTodos('active')">Active</button>
+            <button onclick="filterTodos('completed')">Completed</button>
+        </div>
+
+        <!-- Todo List -->
+        <div id="todoList"></div>
+
+        <!-- Statistics -->
+        <div id="stats"></div>
+    </div>
+
+    <script>
+        // JavaScript Fundamentals Demo
+
+        // Variables (let, const)
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Class Declaration (ES6)
+        class Todo {
+            constructor(text, completed = false) {
+                this.id = Date.now();
+                this.text = text;
+                this.completed = completed;
+            }
+
+            toggleComplete() {
+                this.completed = !this.completed;
+            }
+
+            updateText(newText) {
+                this.text = newText;
+            }
+        }
+
+        // Functions (Arrow functions and regular)
+        const saveToLocalStorage = () => {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        };
+
+        function addTodo() {
+            try {
+                // Input validation
+                if (!todoInput.value.trim()) {
+                    errorMessage.style.display = 'block';
+                    throw new Error('Empty todo input');
+                }
+
+                // Create new Todo instance
+                const newTodo = new Todo(todoInput.value.trim());
+                
+                // Array manipulation
+                todos = [...todos, newTodo];
+                renderTodos();
+                todoInput.value = '';
+                errorMessage.style.display = 'none';
+                saveToLocalStorage();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // DOM Manipulation
+        const renderTodos = (filter = 'all') => {
+            const filteredTodos = todos.filter(todo => {
+                if (filter === 'active') return !todo.completed;
+                if (filter === 'completed') return todo.completed;
+                return true;
+            });
+
+            todoList.innerHTML = filteredTodos.map(todo => `
+                <div class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+                    <span>${todo.text}</span>
+                    <div>
+                        <button onclick="toggleComplete(${todo.id})">Toggle</button>
+                        <button onclick="editTodo(${todo.id})">Edit</button>
+                        <button onclick="deleteTodo(${todo.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            updateStats();
+        };
+
+        // Event handlers
+        const toggleComplete = (id) => {
+            todos = todos.map(todo => 
+                todo.id === id ? {...todo, completed: !todo.completed} : todo
+            );
+            renderTodos();//
+            saveToLocalStorage();//
+        };
+
+        const deleteTodo = (id) => {
+            todos = todos.filter(todo => todo.id !== id);
+            renderTodos();
+            saveToLocalStorage();//here after delete this 2 fn call coz it updated , from both we have to show delete
+        };
+
+        const editTodo = (id) => {
+            const newText = prompt('Enter new text:');
+            if (newText) {
+                todos = todos.map(todo => 
+                    todo.id === id ? {...todo, text: newText} : todo
+                );
+                renderTodos();
+                saveToLocalStorage();
+            }
+        };
+
+        const filterTodos = (filterType) => {
+            renderTodos(filterType);
+        };
+
+        // Higher-order functions
+        const updateStats = () => {
+            const total = todos.length;
+            const completed = todos.filter(todo => todo.completed).length;
+            const remaining = total - completed;
+            
+            document.getElementById('stats').innerHTML = `
+                <p>Total: ${total} | Completed: ${completed} | Remaining: ${remaining}</p>
+            `;
+        };
+
+        // Initial render
+        renderTodos();
+
+        // Event Listeners
+        todoInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+
+        // Async example (setTimeout)
+        setTimeout(() => {
+            console.log('Initial load complete!');
+        }, 1000);
+
+        // Error handling example
+        window.onerror = function(message, url, line) {
+            console.error(`Error: ${message} at ${url}:${line}`);
+            return true;
+        };
+    </script>
+</body>
+</html>
+
+<!-- 
+1. Think about the problem, not the code yet
+
+What do I want? → A Todo list.
+
+What should it do? → Add, mark complete, edit, delete, filter, and show stats.
+
+Where will I keep the todos? → In memory (array), and persist in localStorage.
+
+This step is pure thinking, no coding yet.
+
+2. Decide the Data Structure first
+
+You need a way to represent a todo.
+
+You chose a class Todo with id, text, completed.
+
+Then: an array todos to hold all of them.
+
+👉 Data model always comes first because everything else depends on it.
+
+3. Handle storage
+
+You want the todos to survive page refresh → use localStorage.
+
+Write a helper function: saveToLocalStorage and initialize todos from storage.
+
+👉 This step ensures your app has “memory”.
+
+4. Write the “core actions” (business logic)
+
+These are the things your app can do with the todos (without thinking about the UI yet):
+
+addTodo
+
+toggleComplete
+
+deleteTodo
+
+editTodo
+
+filterTodos
+
+👉 These are functions that only update the data.
+
+5. Connect Data → UI (render function)
+
+Decide how to display todos.
+
+Write renderTodos(filter = 'all') to transform your todos into HTML.
+
+Add updateStats to summarize data.
+
+👉 At this point, you have the “engine” (logic) and the “dashboard” (UI).
+
+6. Event handling
+
+Connect user actions (button clicks, input enter key) to the functions.
+
+Example: onclick="addTodo()", todoInput.addEventListener('keypress', ...).
+
+👉 Now the user can actually interact with your logic.
+
+7. Enhancements & polish
+
+Error handling (if input empty → show error).
+
+Async demo (setTimeout).
+
+Filters (active/completed/all).
+
+Styling with CSS.
+
+👉 Do this last, once the core logic works.
+
+So, the mental order is:
+
+Define the problem clearly.
+
+Decide data structure.
+
+Set up storage (if needed).
+
+Write core logic functions.
+
+Build rendering/UI functions.
+
+Wire events to logic.
+
+Add error handling, polish, extras.
+
+💡 Think of it like building a house:
+
+Foundation = Data model (class Todo, todos array).
+
+Walls = Core logic (add, delete, toggle).
+
+Windows/doors = Rendering to the screen.
+
+Electricity/water = Event listeners.
+
+Paint & decoration = CSS and polish.1. Think about the problem, not the code yet
+
+What do I want? → A Todo list.
+
+What should it do? → Add, mark complete, edit, delete, filter, and show stats.
+
+Where will I keep the todos? → In memory (array), and persist in localStorage.
+
+This step is pure thinking, no coding yet.
+
+2. Decide the Data Structure first
+
+You need a way to represent a todo.
+
+You chose a class Todo with id, text, completed.
+
+Then: an array todos to hold all of them.
+
+👉 Data model always comes first because everything else depends on it.
+
+3. Handle storage
+
+You want the todos to survive page refresh → use localStorage.
+
+Write a helper function: saveToLocalStorage and initialize todos from storage.
+
+👉 This step ensures your app has “memory”.
+
+4. Write the “core actions” (business logic)
+
+These are the things your app can do with the todos (without thinking about the UI yet):
+
+addTodo
+
+toggleComplete
+
+deleteTodo
+
+editTodo
+
+filterTodos
+
+👉 These are functions that only update the data.
+
+5. Connect Data → UI (render function)
+
+Decide how to display todos.
+
+Write renderTodos(filter = 'all') to transform your todos into HTML.
+
+Add updateStats to summarize data.
+
+👉 At this point, you have the “engine” (logic) and the “dashboard” (UI).
+
+6. Event handling
+
+Connect user actions (button clicks, input enter key) to the functions.
+
+Example: onclick="addTodo()", todoInput.addEventListener('keypress', ...).
+
+👉 Now the user can actually interact with your logic.
+
+7. Enhancements & polish
+
+Error handling (if input empty → show error).
+
+Async demo (setTimeout).
+
+Filters (active/completed/all).
+
+Styling with CSS.
+
+👉 Do this last, once the core logic works.
+
+So, the mental order is:
+
+Define the problem clearly.
+
+Decide data structure.
+
+Set up storage (if needed).
+
+Write core logic functions.
+
+Build rendering/UI functions.
+
+Wire events to logic.
+
+Add error handling, polish, extras.
+
+💡 Think of it like building a house:
+
+Foundation = Data model (class Todo, todos array).
+
+Walls = Core logic (add, delete, toggle).
+
+Windows/doors = Rendering to the screen.
+
+Electricity/water = Event listeners.
+
+Paint & decoration = CSS and polish. -->
